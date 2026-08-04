@@ -13,6 +13,7 @@ import { ContactSection } from './components/ContactSection';
 import { InteractiveDemosModal } from './components/InteractiveDemosModal';
 import { CommandMenuModal } from './components/CommandMenuModal';
 import { PortfolioEditorModal } from './components/PortfolioEditorModal';
+import { PortfolioChatbot } from './components/PortfolioChatbot';
 import { Footer } from './components/Footer';
 
 import { 
@@ -180,6 +181,14 @@ export default function App() {
         profile={profile}
         onUpdateProfile={(updated) => setProfile(updated)}
         onResetDefault={() => setProfile(initialProfileData)}
+      />
+
+      {/* AI Portfolio Assistant Floating Chatbot */}
+      <PortfolioChatbot
+        profile={profile}
+        projects={projects}
+        onOpenResume={() => setIsResumeModalOpen(true)}
+        onOpenProject={(proj) => setSelectedProject(proj)}
       />
 
     </div>
