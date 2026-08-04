@@ -1,0 +1,6 @@
+{
+  "name": "Web Portfolio",
+  "description": "A modern, interactive personal developer and designer portfolio with project showcases, experience timeline, skills matrix, and contact form.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
