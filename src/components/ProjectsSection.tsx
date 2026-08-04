@@ -9,7 +9,8 @@ import {
   Play, 
   ArrowUpRight,
   Filter,
-  Check
+  Check,
+  Clock
 } from 'lucide-react';
 import { Project, CategoryType } from '../types';
 
@@ -36,6 +37,18 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
     { id: 'design', label: 'Design Systems' },
     { id: 'mobile', label: 'Mobile' },
   ];
+
+  const calculateReadTime = (project: Project): string => {
+    const combinedText = [
+      project.shortDescription,
+      project.fullDescription,
+      ...(project.keyFeatures || [])
+    ].filter(Boolean).join(' ');
+
+    const words = combinedText.trim().split(/\s+/).filter(Boolean).length;
+    const minutes = Math.max(1, Math.ceil(words / 200));
+    return `${minutes} min read`;
+  };
 
   const toggleBookmark = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -217,18 +230,29 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                       </div>
                     )}
 
-                    {/* Tech Stack Pills */}
-                    <div className="flex flex-wrap gap-1.5 pt-2">
-                      {project.tags.slice(0, 4).map((tag) => (
-                        <span key={tag} className="px-2 py-0.5 text-[11px] font-mono text-slate-300 bg-slate-800 border border-slate-700/60 rounded-md">
-                          {tag}
-                        </span>
-                      ))}
-                      {project.tags.length > 4 && (
-                        <span className="px-1.5 py-0.5 text-[10px] font-mono text-slate-500">
-                          +{project.tags.length - 4}
-                        </span>
-                      )}
+                    {/* Bottom Footer Row: Tech Stack Pills & Estimated Read Time */}
+                    <div className="pt-3 border-t border-slate-800/60 mt-auto flex items-center justify-between gap-2">
+                      <div className="flex flex-wrap gap-1.5 items-center">
+                        {project.tags.slice(0, 3).map((tag) => (
+                          <span key={tag} className="px-2 py-0.5 text-[11px] font-mono text-slate-300 bg-slate-800 border border-slate-700/60 rounded-md">
+                            {tag}
+                          </span>
+                        ))}
+                        {project.tags.length > 3 && (
+                          <span className="px-1.5 py-0.5 text-[10px] font-mono text-slate-500">
+                            +{project.tags.length - 3}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Estimated Read Time Badge */}
+                      <div 
+                        className="flex items-center gap-1.5 text-[11px] font-mono font-medium text-cyan-300/90 bg-slate-950/80 px-2.5 py-1 rounded-md border border-slate-800/90 shrink-0"
+                        title="Estimated reading time for full project description"
+                      >
+                        <Clock className="w-3 h-3 text-cyan-400" />
+                        <span>{calculateReadTime(project)}</span>
+                      </div>
                     </div>
 
                   </div>
