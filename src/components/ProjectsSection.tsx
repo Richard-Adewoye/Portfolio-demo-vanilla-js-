@@ -131,8 +131,16 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                 <div
                   key={project.id}
                   onClick={() => onSelectProject(project)}
-                  className="group relative bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col cursor-pointer"
+                  className="group relative bg-slate-900/90 backdrop-blur-md border border-slate-800/80 hover:border-cyan-500/40 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-cyan-500/10 hover:scale-[1.025] hover:-translate-y-1.5 transition-all duration-300 ease-out flex flex-col cursor-pointer"
                 >
+                  {/* Glassmorphism Border & Ambient Light Highlight Effect on Hover */}
+                  <div className="absolute -inset-[1px] rounded-3xl bg-gradient-to-r from-cyan-500/0 via-indigo-500/0 to-purple-500/0 group-hover:from-cyan-500/30 group-hover:via-indigo-500/25 group-hover:to-cyan-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none -z-10 blur-sm" />
+                  
+                  {/* Subtle Top Glass Reflection Line */}
+                  <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/0 to-transparent group-hover:via-cyan-300/40 transition-all duration-500 z-10 pointer-events-none" />
+                  
+                  {/* Inner Glass Highlight Overlay */}
+                  <div className="absolute inset-0 rounded-3xl pointer-events-none bg-gradient-to-b from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
                   
                   {/* Thumbnail Image Header */}
                   <div className="relative aspect-video overflow-hidden bg-slate-950">
