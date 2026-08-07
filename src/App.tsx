@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { LanguageProvider } from './context/LanguageContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { AboutSection } from './components/AboutSection';
@@ -27,7 +28,7 @@ import {
 
 import { Project, Service, ThemeMode, ProfileData } from './types';
 
-export default function App() {
+function PortfolioApp() {
   // State management
   const [profile, setProfile] = useState<ProfileData>(initialProfileData);
   const [projects] = useState<Project[]>(initialProjects);
@@ -203,5 +204,13 @@ export default function App() {
       />
 
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <LanguageProvider>
+      <PortfolioApp />
+    </LanguageProvider>
   );
 }

@@ -11,10 +11,12 @@ import {
   Download, 
   Check,
   Compass,
-  Palette
+  Palette,
+  Globe
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ThemeMode, ProfileData } from '../types';
+import { useLanguage } from '../context/LanguageContext';
 
 interface NavbarProps {
   profile: ProfileData;
@@ -33,6 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenEditor,
   onOpenResume
 }) => {
+  const { language, toggleLanguage, t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeSection, setActiveSection] = useState('about');
@@ -40,13 +43,13 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
 
   const navLinks = [
-    { name: 'About', href: '#about', id: 'about' },
-    { name: 'Projects', href: '#projects', id: 'projects' },
-    { name: 'Experience', href: '#experience', id: 'experience' },
-    { name: 'Skills', href: '#skills', id: 'skills' },
-    { name: 'Services', href: '#services', id: 'services' },
-    { name: 'Testimonials', href: '#testimonials', id: 'testimonials' },
-    { name: 'Contact', href: '#contact', id: 'contact' },
+    { key: 'nav.about', name: t('nav.about'), href: '#about', id: 'about' },
+    { key: 'nav.projects', name: t('nav.projects'), href: '#projects', id: 'projects' },
+    { key: 'nav.experience', name: t('nav.experience'), href: '#experience', id: 'experience' },
+    { key: 'nav.skills', name: t('nav.skills'), href: '#skills', id: 'skills' },
+    { key: 'nav.services', name: t('nav.services'), href: '#services', id: 'services' },
+    { key: 'nav.testimonials', name: t('nav.testimonials'), href: '#testimonials', id: 'testimonials' },
+    { key: 'nav.contact', name: t('nav.contact'), href: '#contact', id: 'contact' },
   ];
 
   // Scroll handler for background state, progress percentage, and active section intersection
@@ -171,6 +174,20 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="hidden xl:inline">Search</span>
               <kbd className="px-1.5 py-0.5 text-[10px] bg-slate-900 text-slate-400 rounded border border-slate-700">⌘K</kbd>
             </button>
+
+            {/* Language Toggle Button (EN / ES) */}
+            <motion.button
+              whileTap={{ scale: 0.92 }}
+              onClick={toggleLanguage}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700/80 text-slate-200 hover:text-white hover:border-cyan-500/50 transition-all duration-200 shadow-sm"
+              title={language === 'en' ? 'Cambiar a Español' : 'Switch to English'}
+              aria-label="Toggle Language"
+            >
+              <Globe className="w-3.5 h-3.5 text-cyan-400" />
+              <span className="text-xs font-bold font-mono uppercase tracking-wider text-cyan-300">
+                {language === 'en' ? 'EN 🇺🇸' : 'ES 🇪🇸'}
+              </span>
+            </motion.button>
 
             {/* Dedicated High-Contrast Light / Dark Mode Toggle Button */}
             <motion.button

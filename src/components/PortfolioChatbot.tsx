@@ -16,6 +16,7 @@ import {
   ChevronDown
 } from 'lucide-react';
 import { ProfileData, Project } from '../types';
+import { useLanguage } from '../context/LanguageContext';
 
 interface Message {
   id: string;
@@ -42,6 +43,7 @@ export const PortfolioChatbot: React.FC<PortfolioChatbotProps> = ({
   onOpenResume,
   onOpenProject
 }) => {
+  const { t, language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -258,10 +260,10 @@ export const PortfolioChatbot: React.FC<PortfolioChatbotProps> = ({
 
           <div className="text-left hidden sm:block pr-1">
             <div className="text-xs font-bold leading-tight flex items-center gap-1.5">
-              <span>Ask Alex AI</span>
+              <span>{t('chat.askAlex')}</span>
               <Sparkles className="w-3 h-3 text-cyan-300" />
             </div>
-            <div className="text-[10px] text-cyan-100 font-mono opacity-90">Online & Ready</div>
+            <div className="text-[10px] text-cyan-100 font-mono opacity-90">{t('chat.online')}</div>
           </div>
         </button>
       )}
@@ -279,7 +281,7 @@ export const PortfolioChatbot: React.FC<PortfolioChatbotProps> = ({
               </div>
               <div>
                 <div className="text-sm font-bold text-white flex items-center gap-1.5">
-                  <span>Alex AI Assistant</span>
+                  <span>{t('chat.assistant')}</span>
                   <span className="text-[10px] font-mono px-1.5 py-0.2 bg-cyan-950 text-cyan-300 border border-cyan-800/60 rounded-md">v2.5</span>
                 </div>
                 <div className="text-[11px] text-slate-400 flex items-center gap-1 font-mono">
@@ -378,7 +380,7 @@ export const PortfolioChatbot: React.FC<PortfolioChatbotProps> = ({
           >
             <input
               type="text"
-              placeholder="Ask anything about Alex's portfolio..."
+              placeholder={t('chat.placeholder')}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               className="flex-1 px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"

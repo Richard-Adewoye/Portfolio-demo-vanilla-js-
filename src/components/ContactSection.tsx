@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ProfileData, Service } from '../types';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ContactSectionProps {
   profile: ProfileData;
@@ -22,6 +23,7 @@ interface ContactSectionProps {
 }
 
 export const ContactSection: React.FC<ContactSectionProps> = ({ profile, prefilledSubject = '' }) => {
+  const { t } = useLanguage();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState(prefilledSubject);
@@ -79,13 +81,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile, prefill
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-800/60 text-xs font-mono text-cyan-300">
             <Mail className="w-3.5 h-3.5" />
-            <span>Get In Touch</span>
+            <span>{t('nav.contact')}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
-            Let's build something exceptional together
+            {t('contact.title')}
           </h2>
           <p className="text-slate-400 text-sm sm:text-base">
-            Have a project in mind, an open role, or just want to connect? Send a message below.
+            {t('contact.subtitle')}
           </p>
         </div>
 
@@ -95,7 +97,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile, prefill
           <div className="lg:col-span-5 space-y-6">
             
             <div className="p-8 bg-slate-900 border border-slate-800 rounded-3xl space-y-6">
-              <h3 className="text-xl font-bold text-white">Contact Information</h3>
+              <h3 className="text-xl font-bold text-white">{t('contact.emailDirectly')}</h3>
               
               <div className="space-y-4 text-sm text-slate-300">
                 <div className="flex items-start gap-3">
@@ -104,8 +106,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile, prefill
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-xs text-slate-500 font-mono flex items-center justify-between">
-                      <span>Email Directly</span>
-                      <span className="text-[10px] text-cyan-400/80 font-normal">Click to copy</span>
+                      <span>{t('contact.emailDirectly')}</span>
+                      <span className="text-[10px] text-cyan-400/80 font-normal">{t('contact.clickToCopy')}</span>
                     </div>
                     <div className="flex items-center gap-2 mt-0.5">
                       <a href={`mailto:${profile.email}`} className="font-semibold text-white hover:text-cyan-400 transition-colors truncate">
