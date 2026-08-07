@@ -63,18 +63,29 @@ export default function App() {
     setIsDemosModalOpen(true);
   };
 
+  // Sync document class for light/dark mode
+  React.useEffect(() => {
+    if (theme === 'light') {
+      document.documentElement.classList.add('light');
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+  }, [theme]);
+
   // Get container theme classes
   const getThemeClass = () => {
     switch (theme) {
       case 'light':
-        return 'bg-slate-950 text-slate-100 theme-light';
+        return 'bg-slate-50 text-slate-900 theme-light light';
       case 'emerald':
-        return 'bg-slate-950 text-slate-100 theme-emerald';
+        return 'bg-slate-950 text-slate-100 theme-emerald dark';
       case 'amber':
-        return 'bg-slate-950 text-slate-100 theme-amber';
+        return 'bg-slate-950 text-slate-100 theme-amber dark';
       case 'dark':
       default:
-        return 'bg-slate-950 text-slate-100 theme-dark';
+        return 'bg-slate-950 text-slate-100 theme-dark dark';
     }
   };
 
