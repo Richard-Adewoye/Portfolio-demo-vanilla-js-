@@ -8,8 +8,12 @@ import {
   Sparkles, 
   Calendar, 
   Clock,
-  MessageSquare
+  MessageSquare,
+  Copy,
+  Check,
+  X
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { ProfileData, Service } from '../types';
 
 interface ContactSectionProps {
@@ -25,12 +29,36 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile, prefill
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   React.useEffect(() => {
     if (prefilledSubject) {
       setSubject(prefilledSubject);
     }
   }, [prefilledSubject]);
+
+  const handleCopyEmail = (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    navigator.clipboard.writeText(profile.email).then(() => {
+      setCopied(true);
+      setShowToast(true);
+      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setShowToast(false), 3000);
+    }).catch(() => {
+      // Fallback
+      const textArea = document.createElement('textarea');
+      textArea.value = profile.email;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopied(true);
+      setShowToast(true);
+      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setShowToast(false), 3000);
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,11 +102,38 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile, prefill
                   <div className="p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-cyan-400">
                     <Mail className="w-4 h-4" />
                   </div>
-                  <div>
-                    <div className="text-xs text-slate-500 font-mono">Email Directly</div>
-                    <a href={`mailto:${profile.email}`} className="font-semibold text-white hover:text-cyan-400 transition-colors">
-                      {profile.email}
-                    </a>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs text-slate-500 font-mono flex items-center justify-between">
+                      <span>Email Directly</span>
+                      <span className="text-[10px] text-cyan-400/80 font-normal">Click to copy</span>
+                    </div>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <a href={`mailto:${profile.email}`} className="font-semibold text-white hover:text-cyan-400 transition-colors truncate">
+                        {profile.email}
+                      </a>
+                      <button
+                        onClick={handleCopyEmail}
+                        className={`p-1.5 rounded-lg border transition-all flex items-center gap-1.5 text-xs font-mono shrink-0 ${
+                          copied
+                            ? 'bg-emerald-950/80 border-emerald-500/80 text-emerald-300'
+                            : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-cyan-300 hover:border-cyan-500/50'
+                        }`}
+                        title="Copy Email to Clipboard"
+                        aria-label="Copy Email to Clipboard"
+                      >
+                        {copied ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-emerald-400" />
+                            <span className="text-[10px] text-emerald-300 font-bold">Copied!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5" />
+                            <span className="text-[10px] hidden sm:inline">Copy</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -242,6 +297,40 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile, prefill
         </div>
 
       </div>
+
+      {/* Toast Notification Confirmation */}
+      <AnimatePresence>
+        {showToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 sm:left-auto sm:right-8 sm:translate-x-0 z-50 flex items-center gap-3 px-4 py-3 bg-slate-900/95 border border-emerald-500/50 rounded-2xl shadow-2xl shadow-emerald-950/40 backdrop-blur-xl text-white"
+          >
+            <div className="p-1.5 bg-emerald-950 border border-emerald-500/60 text-emerald-400 rounded-xl">
+              <CheckCircle2 className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                <span>Email Copied to Clipboard!</span>
+                <Sparkles className="w-3 h-3 text-emerald-400" />
+              </div>
+              <div className="text-[11px] text-slate-300 font-mono mt-0.5">
+                {profile.email}
+              </div>
+            </div>
+            <button
+              onClick={() => setShowToast(false)}
+              className="p-1 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors ml-2"
+              title="Dismiss Toast"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </section>
   );
 };
