@@ -15,7 +15,9 @@ import { InteractiveDemosModal } from './components/InteractiveDemosModal';
 import { CommandMenuModal } from './components/CommandMenuModal';
 import { PortfolioEditorModal } from './components/PortfolioEditorModal';
 import { PortfolioChatbot } from './components/PortfolioChatbot';
+import { KeyboardShortcutsTooltip } from './components/KeyboardShortcutsTooltip';
 import { Footer } from './components/Footer';
+import { useLanguage } from './context/LanguageContext';
 
 import { 
   initialProfileData, 
@@ -29,6 +31,8 @@ import {
 import { Project, Service, ThemeMode, ProfileData } from './types';
 
 function PortfolioApp() {
+  const { toggleLanguage } = useLanguage();
+
   // State management
   const [profile, setProfile] = useState<ProfileData>(initialProfileData);
   const [projects] = useState<Project[]>(initialProjects);
@@ -47,6 +51,28 @@ function PortfolioApp() {
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const [isCommandMenuOpen, setIsCommandMenuOpen] = useState(false);
   const [isEditorModalOpen, setIsEditorModalOpen] = useState(false);
+
+  // Keyboard shortcut listener for T and L keys
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in an input or textarea
+      const target = e.target as HTMLElement;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        return;
+      }
+
+      if ((e.key === 't' || e.key === 'T') && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+      } else if ((e.key === 'l' || e.key === 'L') && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        toggleLanguage();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [toggleLanguage]);
 
   // Pre-filled contact subject
   const [contactSubject, setContactSubject] = useState('');
@@ -201,6 +227,13 @@ function PortfolioApp() {
         projects={projects}
         onOpenResume={() => setIsResumeModalOpen(true)}
         onOpenProject={(proj) => setSelectedProject(proj)}
+      />
+
+      {/* Floating Keyboard Shortcuts Tooltip */}
+      <KeyboardShortcutsTooltip
+        onOpenCommandMenu={() => setIsCommandMenuOpen(true)}
+        onToggleTheme={() => setTheme(prev => (prev === 'light' ? 'dark' : 'light'))}
+        onToggleLanguage={toggleLanguage}
       />
 
     </div>
